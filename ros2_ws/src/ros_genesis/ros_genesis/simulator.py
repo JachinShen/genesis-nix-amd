@@ -30,7 +30,7 @@ class GenesisPublisher(Node):
         print(self.joint_names)
         print(self.dofs_idx)
 
-        self.joint_publishers = [self.create_publisher(JointState, f'genesis/{name}', 10) for name in self.joint_names]
+        self.joint_publishers = [self.create_publisher(JointState, f'/genesis/{name}', 10) for name in self.joint_names]
         self.timer_period = 1.0 / fps  # seconds
         self.timer = self.create_timer(self.timer_period, self.timer_callback)
         self.i = 0

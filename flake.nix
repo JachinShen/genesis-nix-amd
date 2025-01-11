@@ -10,16 +10,13 @@
           inherit system;
           overlays = [ nix-ros-overlay.overlays.default ];
         };
-        venvDir = "./.venv";
       in {
         devShells.default = pkgs.mkShell {
           name = "ROS2 Genesis intergation";
-          venvDir = venvDir;
-          PYTHONPATH = "${venvDir}/lib/python3.12/site-packages";
+          venvDir = ".venv";
           HSA_OVERRIDE_GFX_VERSION = "10.3.0";
           # env.LD_LIBRARY_PATH="/run/opengl-driver/lib:/run/opengl-driver-32/lib";
           PYOPENGL_PLATFORM = "glx"; # https://github.com/Genesis-Embodied-AI/Genesis/issues/10
-          # LD_LIBRARY_PATH = "${pkgs.xorg.libX11}/lib:${pkgs.libGL}/lib:$LD_LIBRARY_PATH";
           LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath 
             (with pkgs; [
               stdenv.cc.cc
@@ -49,6 +46,10 @@
               ];
             })
           ];
+
+          postShellHook = ''
+            export PYTHONPATH=$VIRTUAL_ENV/lib/python3.12/site-packages:$PYTHONPATH
+          '';
         };
       });
   nixConfig = {
